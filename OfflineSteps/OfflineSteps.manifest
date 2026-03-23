@@ -1,0 +1,12 @@
+{
+	"autodeskProduct": "Fusion",
+	"type":	"addin",
+	"author": "FRC Team 1912",
+	"description":	{
+		"":	"Adds functionality to import STEP files without uploading them to the cloud"
+	},
+	"version": "1.0.0",
+	"runOnStartup":	true,
+	"supportedOS": "windows|mac",
+	"iconFilename":	"icon.svg"
+}
