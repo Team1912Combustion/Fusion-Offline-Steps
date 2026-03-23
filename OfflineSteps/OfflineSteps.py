@@ -55,10 +55,10 @@ class CommandCreatedHandler(adsk.core.CommandCreatedEventHandler):
             step_options.isViewFit = False
 
             if design.designIntent:
-                app.importManager \
-                    .importToTarget2(step_options, design.rootComponent) \
-                    .item(0) \
-                    .isGroundToParent = False
+                app.importManager.importToTarget(
+                    step_options,
+                    design.rootComponent
+                )
             else: app.importManager.importToNewDocument(step_options)
 
 def remove_button_from_panel(panel_name):
