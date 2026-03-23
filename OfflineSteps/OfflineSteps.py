@@ -27,6 +27,9 @@ def run(context):
         # add the toolbar button to the "Insert" panel
         app.userInterface.allToolbarPanels.itemById('InsertPanel').controls \
             .addCommand(main_button)
+
+        app.userInterface.allToolbarPanels.itemById('CAMManagePanel').controls \
+            .addCommand(main_button)
     except:
         if ui:
             ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))
@@ -42,6 +45,9 @@ class CommandCreatedHandler(adsk.core.CommandCreatedEventHandler):
 
         if file_dialog.showOpen() != adsk.core.DialogResults.DialogOK: return
 
+        app.userInterface.workspaces.itemById('FusionSolidEnvironment') \
+            .activate()
+
         for file_path in file_dialog.filenames:
             design = adsk.fusion.Design.cast(app.activeProduct)
         
@@ -55,20 +61,22 @@ class CommandCreatedHandler(adsk.core.CommandCreatedEventHandler):
                     .isGroundToParent = False
             else: app.importManager.importToNewDocument(step_options)
 
+def remove_button_from_panel(panel_name):
+    button = app.userInterface.allToolbarPanels.itemById(panel_name) \
+        .controls.itemById('OfflineStepsAddInButton')
+    if button: button.deleteMe()
+
 def stop(context):
     try:
-        app = adsk.core.Application.get()
         ui  = app.userInterface
         
         # Clean up the UI.
         cmdDef = ui.commandDefinitions.itemById('OfflineStepsAddInButton')
         if cmdDef:
             cmdDef.deleteMe()
-            
-        addinsPanel = ui.allToolbarPanels.itemById('InsertPanel')
-        cntrl = addinsPanel.controls.itemById('OfflineStepsAddInButton')
-        if cntrl:
-            cntrl.deleteMe()
+
+        remove_button_from_panel('InsertPanel')
+        remove_button_from_panel('CAMManagePanel')
     except:
         if ui:
             ui.messageBox('Failed:\n{}'.format(traceback.format_exc()))	
